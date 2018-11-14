@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -40,18 +42,18 @@ public class MusicPlayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_play);
-
-        Log.d("ThisClassName","msg---------------------------");
-
-        mTextMessage = (TextView) findViewById(R.id.message);
+        mTextMessage = findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        String[] testStrings = {"text1" , "text2" , "text3" , "text4" , "text5" , "text6" , "text7"  , "text4" , "text5" , "text6" , "text7" };
+        insertToList(testStrings);
     }
 
-    private void createTextList(String[] insertionTexts){
-        //for(String texts : insertionTexts){
-        //    Log.v("Tag","msg---------------------------");
-        //}
+    private void insertToList( String[] insertionTexts ){
+        ArrayAdapter arrayAdapter = new ArrayAdapter<>(this , android.R.layout.simple_list_item_1 , insertionTexts);
+        ListView musicList = findViewById(R.id.musicList);
+        musicList.setAdapter(arrayAdapter);
     }
 
 }
