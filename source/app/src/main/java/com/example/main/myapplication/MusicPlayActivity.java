@@ -1,6 +1,9 @@
 package com.example.main.myapplication;
 
-import android.nfc.Tag;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +20,7 @@ public class MusicPlayActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
 
+
     //This is Listener. Not run even if write code on this
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -25,7 +29,7 @@ public class MusicPlayActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
+                    mTextMessage.setText(R.string.title_dashboard);
                     return true;
                 case R.id.navigation_dashboard:
                     mTextMessage.setText(R.string.title_dashboard);
@@ -40,14 +44,30 @@ public class MusicPlayActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        runTimePermissionRequest();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_play);
         mTextMessage = findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        String[] testStrings = {"text1" , "text2" , "text3" , "text4" , "text5" , "text6" , "text7"  , "text4" , "text5" , "text6" , "text7" };
-        insertToList(testStrings);
+        ContentsLoader loader = new ContentsLoader(this);
+
+
+        String[] fileList = loader.getFileList();
+        insertToList(fileList);
+
+    }
+
+    private void runTimePermissionRequest(){
+        String[] PERMISSIONS_STORAGE = { Manifest.permission.READ_EXTERNAL_STORAGE };
+        final int REQUEST_EXTERNAL_STORAGE = 1;
+        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        if(permission != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE , REQUEST_EXTERNAL_STORAGE);
+        }
     }
 
     private void insertToList( String[] insertionTexts ){
