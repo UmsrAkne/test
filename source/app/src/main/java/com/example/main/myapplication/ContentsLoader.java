@@ -3,6 +3,7 @@ package com.example.main.myapplication;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.media.audiofx.EnvironmentalReverb;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -19,7 +20,11 @@ public class ContentsLoader {
     }
 
 
-    public String[] getFileList(){
+    public File[] getFilesFromDirectory(String targetDirectoryName){
+        File directory = Environment.getExternalStoragePublicDirectory(targetDirectoryName);
+        File[] files = new File(directory.getPath()).listFiles();
+        return files;
+    }
 
 
         File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
