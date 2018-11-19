@@ -18,8 +18,8 @@ import java.util.ArrayList;
 
 public class MusicPlayActivity extends AppCompatActivity {
 
-    private TextView mTextMessage;
 
+    private Player player = new Player();
 
     //This is Listener. Not run even if write code on this
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -28,14 +28,11 @@ public class MusicPlayActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_dashboard);
+                case R.id.navigation_Prev:
                     return true;
-                case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
+                case R.id.navigation_Play:
                     return true;
-                case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
+                case R.id.navigation_Next:
                     return true;
             }
             return false;
@@ -49,7 +46,6 @@ public class MusicPlayActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_play);
-        mTextMessage = findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
