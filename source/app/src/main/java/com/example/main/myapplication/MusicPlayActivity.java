@@ -51,10 +51,27 @@ public class MusicPlayActivity extends AppCompatActivity {
 
         ContentsLoader loader = new ContentsLoader(this);
 
+        musicFiles = loader.getFilesFromDirectory(Environment.DIRECTORY_MUSIC);
+        String[] fileNameList = new String[ musicFiles.length ];
 
-        String[] fileList = loader.getFileList();
-        insertToList(fileList);
+        for(int i = 0; i < musicFiles.length; i++){
+            fileNameList[i] = musicFiles[i].getName();
+        }
 
+        insertToList(fileNameList);
+
+        setMusicListOnItemClickEvent();
+    }
+
+    private void setMusicListOnItemClickEvent(){
+        musicList = findViewById(R.id.musicList);
+        musicList.setOnItemClickListener( new AdapterView.OnItemClickListener()
+        {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                String item = (String)musicList.getItemAtPosition(position);
+                Log.i("userTag",item);
+            }
+        });
     }
 
     private void runTimePermissionRequest(){
