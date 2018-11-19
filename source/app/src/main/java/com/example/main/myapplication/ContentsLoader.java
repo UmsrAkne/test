@@ -26,9 +26,9 @@ public class ContentsLoader {
         return files;
     }
 
+    public String[] getFileList(){
 
-        File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
-        File[] files = new File(directory.getPath()).listFiles();
+        File[] files = getFilesFromDirectory(Environment.DIRECTORY_MUSIC);
 
         if(files == null){
             Log.i("userTag","files is null");
