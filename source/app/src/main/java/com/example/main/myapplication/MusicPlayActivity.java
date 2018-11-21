@@ -35,7 +35,7 @@ public class MusicPlayActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
             int nextPlayFilePosition = lastPlayedFilePosition;
-            Log.i("userTag",Integer.toString(nextPlayFilePosition));
+            Log.i("userTag",Integer.toString(lastPlayedFilePosition));
 
             switch (item.getItemId()) {
                 case R.id.navigation_Prev:
@@ -64,6 +64,8 @@ public class MusicPlayActivity extends AppCompatActivity {
         }
     };
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -85,6 +87,18 @@ public class MusicPlayActivity extends AppCompatActivity {
 
         insertToList(fileNameList);
         setMusicListOnItemClickEvent();
+
+        findViewById(R.id.minus30sButton).setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                player.seekFromCurrentPosition( player.MINUS_THIRTY_SECONDS );
+            }
+        });
+
+        findViewById(R.id.plus30sButton).setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                player.seekFromCurrentPosition( player.PLUS_THIRTY_SECONDS );
+            }
+        });
     }
 
     private void setMusicListOnItemClickEvent(){

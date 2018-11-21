@@ -38,24 +38,26 @@
         app:layout_constraintTop_toBottomOf="@+id/musicList" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/minus30sButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/title_minus30s"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/musicList" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/plus30sButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toRightOf="@+id/button"
+        android:text="@string/title_plus30s"
+        app:layout_constraintLeft_toRightOf="@+id/minus30sButton"
         app:layout_constraintTop_toBottomOf="@+id/musicList" />
 
     <Button
         android:id="@+id/button3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toRightOf="@+id/button2"
+        app:layout_constraintLeft_toRightOf="@+id/plus30sButton"
         app:layout_constraintTop_toBottomOf="@+id/musicList" />
 
     <Button
