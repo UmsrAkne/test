@@ -14,7 +14,7 @@
         android:id="@+id/navigation_Play"
         android:checkable="false"
         android:checked="true"
-        android:title="Play" />
+        android:title="Start or Pause" />
 
     <item
         android:id="@+id/navigation_Next"
