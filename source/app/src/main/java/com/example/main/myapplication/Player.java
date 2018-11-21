@@ -8,35 +8,45 @@ import java.io.IOException;
 public final class Player {
 
     private MediaPlayer mediaPlayer = new MediaPlayer();
+    private Boolean isPausing = false;
 
     //Example.
     //player.play("/storage/emulated/0/Music/fileName.mp3")
     public void play(String soundFilePath){
+
+        mediaPlayer.reset();
+
+        //TODO: Please correct error handling.
         try{
             mediaPlayer.setDataSource(soundFilePath);
         } catch (IOException e){
-            Log.e("userTag" , "Error");
+            Log.e("userTag" , "throw error when mediaplayer.setDataSource");
             e.printStackTrace();
         }
 
         try {
             mediaPlayer.prepare();
-        }
-            catch (IOException e){
-                Log.e("userTag" , "Error");
+        } catch (IOException e){
+            Log.e("userTag" , "throw error when mediaplayer.setDataSource");
             e.printStackTrace();
         }
 
         mediaPlayer.start();
-
     }
 
     public void pause(){
+        if(isPausing){
+            mediaPlayer.start();
+            isPausing = false;
+            return;
+        }
 
+        mediaPlayer.pause();
+        isPausing = true;
     }
 
     public void stop(){
-
+        mediaPlayer.stop();
     }
 
     public void playNext(){
@@ -46,4 +56,6 @@ public final class Player {
     public void playPrev(){
 
     }
+
+
 }
