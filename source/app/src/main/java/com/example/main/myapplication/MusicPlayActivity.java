@@ -2,6 +2,7 @@ package com.example.main.myapplication;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -10,16 +11,21 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import java.io.File;
 
 import java.util.ArrayList;
 
 public class MusicPlayActivity extends AppCompatActivity {
 
-
     private Player player = new Player();
+    private ListView musicList;
+    private File[] musicFiles;
+    private int lastPlayedFilePosition;
 
     //This is Listener. Not run even if write code on this
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -27,12 +33,31 @@ public class MusicPlayActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+            int nextPlayFilePosition = lastPlayedFilePosition;
+            Log.i("userTag",Integer.toString(nextPlayFilePosition));
+
             switch (item.getItemId()) {
                 case R.id.navigation_Prev:
+                    nextPlayFilePosition -= 1;
+                    if(nextPlayFilePosition >= 0){
+                        String nextPlayFilePath = musicFiles[ nextPlayFilePosition ].getPath();
+                        lastPlayedFilePosition -= 1;
+                        player.play( nextPlayFilePath );
+                    }
                     return true;
+
                 case R.id.navigation_Play:
+                    player.pause();
                     return true;
+
                 case R.id.navigation_Next:
+                    nextPlayFilePosition += 1;
+                    if(musicFiles.length > nextPlayFilePosition){
+                        String nextPlayFilePath = musicFiles[ nextPlayFilePosition ].getPath();
+                        lastPlayedFilePosition += 1;
+                        player.play( nextPlayFilePath );
+                    }
                     return true;
             }
             return false;
@@ -59,7 +84,6 @@ public class MusicPlayActivity extends AppCompatActivity {
         }
 
         insertToList(fileNameList);
-
         setMusicListOnItemClickEvent();
     }
 
@@ -69,7 +93,9 @@ public class MusicPlayActivity extends AppCompatActivity {
         {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
                 String item = (String)musicList.getItemAtPosition(position);
-                Log.i("userTag",item);
+                File selectedMusicFile = musicFiles[ position ];
+                player.play( selectedMusicFile.getPath() );
+                lastPlayedFilePosition = position;
             }
         });
     }
@@ -84,8 +110,14 @@ public class MusicPlayActivity extends AppCompatActivity {
     }
 
     private void insertToList( String[] insertionTexts ){
-        ArrayAdapter arrayAdapter = new ArrayAdapter<>(this , android.R.layout.simple_list_item_1 , insertionTexts);
-        ListView musicList = findViewById(R.id.musicList);
+        ArrayAdapter arrayAdapter = new ArrayAdapter<>(this , android.R.layout.simple_list_item_1 ,insertionTexts);
+        this.musicList = findViewById(R.id.musicList);
+        musicList.setAdapter(arrayAdapter);
+    }
+
+    private void insertToList( File[] files){
+        ArrayAdapter arrayAdapter = new ArrayAdapter<>(this , android.R.layout.simple_list_item_1 , files);
+        this.musicList = findViewById(R.id.musicList);
         musicList.setAdapter(arrayAdapter);
     }
 
