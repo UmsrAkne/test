@@ -23,10 +23,11 @@ import java.io.File;
 
 public class MusicPlayActivity extends AppCompatActivity {
 
-    private Player player = new Player();
+    private Player player;
     private ListView musicList;
     private File[] musicFiles;
     private int lastPlayedFilePosition;
+    private Boolean isExecuted = false;
 
     //This is Listener. Not run even if write code on this
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -65,14 +66,16 @@ public class MusicPlayActivity extends AppCompatActivity {
         }
     };
 
-
+    protected void onRestart(){
+        super.onRestart();
+        Log.i("userTag","restert");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         Log.i("userTag" , " called onCreate()");
         runTimePermissionRequest();
-        
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_play);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -116,6 +119,14 @@ public class MusicPlayActivity extends AppCompatActivity {
                 addToDeviceVolume(VOLUME_PLUS_VALUE);
             }
         });
+
+        //if it don't write this, created multiple player instances.
+        if(savedInstanceState == null) {
+            player = new Player();
+        }
+
+        onSaveInstanceState(new Bundle());
+
     }
 
     private void addToDeviceVolume(int value){
@@ -162,8 +173,29 @@ public class MusicPlayActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
+        outState.putString("executed" , "string");
+        Log.i("userTag" , "exe onSaveInstanceState");
     }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle saveInstanceState){
+        super.onRestoreInstanceState(saveInstanceState);
+        Log.i("userTag" , "exe onRestoreInstanceState");
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        onSaveInstanceState(new Bundle());
+        Log.i("userTag","exe pause method");
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        Log.i("userTag","exe resume");
+    }
+
 
 
 }
