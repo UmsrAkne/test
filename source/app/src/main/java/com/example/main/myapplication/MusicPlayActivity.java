@@ -1,7 +1,9 @@
 package com.example.main.myapplication;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -18,7 +20,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import java.io.File;
 
-import java.util.ArrayList;
 
 public class MusicPlayActivity extends AppCompatActivity {
 
@@ -69,8 +70,9 @@ public class MusicPlayActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        Log.i("userTag" , " called onCreate()");
         runTimePermissionRequest();
-
+        
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_play);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -99,6 +101,28 @@ public class MusicPlayActivity extends AppCompatActivity {
                 player.seekFromCurrentPosition( player.PLUS_THIRTY_SECONDS );
             }
         });
+
+        final int VOLUME_PLUS_VALUE = 1;
+        final int VOLUME_MINUS_VALUE = -1;
+
+        findViewById(R.id.volumeDownButton).setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                addToDeviceVolume(VOLUME_MINUS_VALUE);
+            }
+        });
+
+        findViewById(R.id.volumeUpButton).setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                addToDeviceVolume(VOLUME_PLUS_VALUE);
+            }
+        });
+    }
+
+    private void addToDeviceVolume(int value){
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        int musicVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        musicVolume += value;
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,musicVolume,0);
     }
 
     private void setMusicListOnItemClickEvent(){
@@ -134,5 +158,12 @@ public class MusicPlayActivity extends AppCompatActivity {
         this.musicList = findViewById(R.id.musicList);
         musicList.setAdapter(arrayAdapter);
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+    }
+
 
 }

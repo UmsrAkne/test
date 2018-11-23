@@ -54,17 +54,19 @@
         app:layout_constraintTop_toBottomOf="@+id/musicList" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/volumeDownButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/title_volDown"
         app:layout_constraintLeft_toRightOf="@+id/plus30sButton"
         app:layout_constraintTop_toBottomOf="@+id/musicList" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/volumeUpButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toRightOf="@+id/button3"
+        android:text="@string/title_volUp"
+        app:layout_constraintLeft_toRightOf="@+id/volumeDownButton"
         app:layout_constraintTop_toBottomOf="@+id/musicList" />
 
 </android.support.constraint.ConstraintLayout>
