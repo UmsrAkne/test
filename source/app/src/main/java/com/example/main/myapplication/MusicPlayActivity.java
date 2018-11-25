@@ -1,11 +1,15 @@
 package com.example.main.myapplication;
 
 import android.Manifest;
+import android.app.ActivityManager;
+import android.app.ApplicationErrorReport;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.os.Bundle;
@@ -19,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import java.io.File;
+import java.util.List;
 
 
 public class MusicPlayActivity extends AppCompatActivity {
@@ -28,6 +33,9 @@ public class MusicPlayActivity extends AppCompatActivity {
     private File[] musicFiles;
     private int lastPlayedFilePosition;
     private Boolean isExecuted = false;
+    private final int VOLUME_PLUS_VALUE = 1;
+    private final int VOLUME_MINUS_VALUE = -1;
+
 
     //This is Listener. Not run even if write code on this
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -93,20 +101,19 @@ public class MusicPlayActivity extends AppCompatActivity {
         insertToList(fileNameList);
         setMusicListOnItemClickEvent();
 
+        if(player == null) Log.i("userTag" , "player is null");
         findViewById(R.id.minus30sButton).setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 player.seekFromCurrentPosition( player.MINUS_THIRTY_SECONDS );
             }
         });
 
+        if(player == null) Log.i("userTag" , "player is null");
         findViewById(R.id.plus30sButton).setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 player.seekFromCurrentPosition( player.PLUS_THIRTY_SECONDS );
             }
         });
-
-        final int VOLUME_PLUS_VALUE = 1;
-        final int VOLUME_MINUS_VALUE = -1;
 
         findViewById(R.id.volumeDownButton).setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -119,13 +126,6 @@ public class MusicPlayActivity extends AppCompatActivity {
                 addToDeviceVolume(VOLUME_PLUS_VALUE);
             }
         });
-
-        //if it don't write this, created multiple player instances.
-        if(savedInstanceState == null) {
-            player = new Player();
-        }
-
-        onSaveInstanceState(new Bundle());
 
     }
 
@@ -143,7 +143,17 @@ public class MusicPlayActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
                 String item = (String)musicList.getItemAtPosition(position);
                 File selectedMusicFile = musicFiles[ position ];
-                player.play( selectedMusicFile.getPath() );
+
+                if(existService(BgmPlayer.class.getName())){
+                    Intent intent = new Intent(getApplication() , BgmPlayer.class);
+                    startForegroundService(intent);
+                }
+
+                if(player == null){
+                    player = new Player();
+                }
+
+                //player.play( selectedMusicFile.getPath() );
                 lastPlayedFilePosition = position;
             }
         });
@@ -170,10 +180,25 @@ public class MusicPlayActivity extends AppCompatActivity {
         musicList.setAdapter(arrayAdapter);
     }
 
+    private boolean existService(String className){
+        ActivityManager am = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> services = am.getRunningServices(Integer.MAX_VALUE);
+        boolean exist = false;
+
+        for(ActivityManager.RunningServiceInfo current : services){
+            if(current.service.getClassName().equals(className)){
+                exist = true;
+            }
+        }
+
+        Log.i("userTag",String.valueOf(exist));
+        return exist;
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("executed" , "string");
+        outState.putBoolean("executed" , isExecuted);
         Log.i("userTag" , "exe onSaveInstanceState");
     }
 
@@ -186,7 +211,6 @@ public class MusicPlayActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         super.onPause();
-        onSaveInstanceState(new Bundle());
         Log.i("userTag","exe pause method");
     }
 
