@@ -7,64 +7,51 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 
 public class BgmPlayer extends Service {
 
-    private Player player = new Player();
+    public Player player;
+    private final IBinder iBinder = new serviceLocalBinder();
 
-    public BgmPlayer() {
+    public class serviceLocalBinder extends Binder {
+        BgmPlayer getService(){
+            return BgmPlayer.this;
+        }
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        if(player == null) {
+            player = new Player();
+        }
+
+        player.play("/storage/emulated/0/Music/136Hz_20061122_349.mp3");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-        int requestCode = intent.getIntExtra("REQUEST_CODE" , 0);
-        Context context = getApplicationContext();
-        String channelID = "default";
-        String title = context.getString(R.string.app_name);
-
-        PendingIntent pendingIntent
-                = PendingIntent.getActivity(context , requestCode , intent , PendingIntent.FLAG_UPDATE_CURRENT);
-
-        NotificationManager notificationManager =
-                (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        NotificationChannel channel = new NotificationChannel(
-            channelID, title , NotificationManager.IMPORTANCE_DEFAULT);
-
-        if(notificationManager != null){
-            notificationManager.createNotificationChannel(channel);
-            Notification notification = new Notification.Builder(context , channelID)
-                    .setContentTitle(title)
-                    .setContentText("player")
-                    .setAutoCancel(true)
-                    .setContentIntent(pendingIntent)
-                    .setWhen(System.currentTimeMillis())
-                    .build();
-
-            startForeground(1 , notification);
-
-            player.play("/storage/emulated/0/Music/136Hz_20061122_349");
-
-        }
-
+        Log.i("userTag" , "onStartCommand");
         return START_NOT_STICKY;
     }
 
     @Override
+    public IBinder onBind(Intent intent) {
+        return iBinder;
+    }
+
+    @Override
     public void onDestroy() {
+        Log.i("userTag" , "BgmPlayer Service is Destoryed");
         super.onDestroy();
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
+    public boolean onUnbind(Intent intent) {
+        return true;
     }
 }

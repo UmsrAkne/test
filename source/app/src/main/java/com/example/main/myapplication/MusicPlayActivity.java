@@ -3,11 +3,14 @@ package com.example.main.myapplication;
 import android.Manifest;
 import android.app.ActivityManager;
 import android.app.ApplicationErrorReport;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.os.Environment;
+import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityManagerCompat;
 import android.support.v4.content.ContextCompat;
@@ -35,6 +38,9 @@ public class MusicPlayActivity extends AppCompatActivity {
     private Boolean isExecuted = false;
     private final int VOLUME_PLUS_VALUE = 1;
     private final int VOLUME_MINUS_VALUE = -1;
+
+    private BgmPlayer boundService;
+    private Boolean isBound;
 
 
     //This is Listener. Not run even if write code on this
@@ -101,17 +107,15 @@ public class MusicPlayActivity extends AppCompatActivity {
         insertToList(fileNameList);
         setMusicListOnItemClickEvent();
 
-        if(player == null) Log.i("userTag" , "player is null");
         findViewById(R.id.minus30sButton).setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                player.seekFromCurrentPosition( player.MINUS_THIRTY_SECONDS );
+                boundService.player.seekFromCurrentPosition(boundService.player.MINUS_THIRTY_SECONDS);
             }
         });
 
-        if(player == null) Log.i("userTag" , "player is null");
         findViewById(R.id.plus30sButton).setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                player.seekFromCurrentPosition( player.PLUS_THIRTY_SECONDS );
+                boundService.player.seekFromCurrentPosition(boundService.player.PLUS_THIRTY_SECONDS);
             }
         });
 
@@ -144,19 +148,39 @@ public class MusicPlayActivity extends AppCompatActivity {
                 String item = (String)musicList.getItemAtPosition(position);
                 File selectedMusicFile = musicFiles[ position ];
 
-                if(existService(BgmPlayer.class.getName())){
-                    Intent intent = new Intent(getApplication() , BgmPlayer.class);
-                    startForegroundService(intent);
+                if(!existService(BgmPlayer.class.getName())){
+                    Intent intent = new Intent(MusicPlayActivity.this , BgmPlayer.class);
+                    startService(intent);
+                    Log.i("userTag","connectedBindService");
                 }
 
-                if(player == null){
-                    player = new Player();
-                }
 
                 //player.play( selectedMusicFile.getPath() );
                 lastPlayedFilePosition = position;
             }
         });
+    }
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className , IBinder service){
+            boundService = ((BgmPlayer.serviceLocalBinder)service).getService();
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            boundService = null;
+        }
+    };
+
+    private void connectBindService(){
+        bindService(new Intent(MusicPlayActivity.this , BgmPlayer.class) , serviceConnection , Context.BIND_AUTO_CREATE);
+        isBound = true;
+    }
+
+    private void disconnectBindService(){
+        if(isBound){
+            unbindService(serviceConnection);
+            isBound = false;
+        }
     }
 
     private void runTimePermissionRequest(){
@@ -199,25 +223,21 @@ public class MusicPlayActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("executed" , isExecuted);
-        Log.i("userTag" , "exe onSaveInstanceState");
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle saveInstanceState){
         super.onRestoreInstanceState(saveInstanceState);
-        Log.i("userTag" , "exe onRestoreInstanceState");
     }
 
     @Override
     protected void onPause(){
         super.onPause();
-        Log.i("userTag","exe pause method");
     }
 
     @Override
     protected void onResume(){
         super.onResume();
-        Log.i("userTag","exe resume");
     }
 
 
