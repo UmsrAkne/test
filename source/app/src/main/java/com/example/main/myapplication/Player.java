@@ -47,6 +47,43 @@ public final class Player {
         isPausing = true;
     }
 
+    public String getCurrentPositionByTime(){
+        int currentPositionByMilliSeconds = mediaPlayer.getCurrentPosition();
+        int crPos = currentPositionByMilliSeconds / 1000;
+
+        int hours = 0;
+        if(crPos > 3600) hours = crPos / 3600;
+
+        int minutes = 0;
+        if(crPos > 60){
+            minutes = crPos % 3600;
+            minutes = minutes / 60;
+        }
+
+        int seconds = crPos % 60;
+
+        final String zeroPadding = "0";
+
+        String strHours = String.valueOf(hours);
+        if(strHours.length() == 1) strHours = zeroPadding + strHours;
+
+        String strMinutes = String.valueOf(minutes);
+        if(strMinutes.length() == 1) strMinutes =  zeroPadding + strMinutes;
+
+        String strSeconds = String.valueOf(seconds);
+        if(strSeconds.length() == 1) strSeconds = zeroPadding + strSeconds;
+
+        String playTime = strHours;
+        playTime += strMinutes;
+        playTime += strSeconds;
+        return playTime;
+    }
+
+    public int getCurrentPositionBySeconds(){
+        int currentPositionByMilliSeconds = mediaPlayer.getCurrentPosition();
+        return currentPositionByMilliSeconds / 1000;
+    }
+
     public void stop(){
         mediaPlayer.stop();
     }
