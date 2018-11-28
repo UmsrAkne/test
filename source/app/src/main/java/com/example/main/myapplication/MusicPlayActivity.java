@@ -2,9 +2,11 @@ package com.example.main.myapplication;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,6 +22,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class MusicPlayActivity extends AppCompatActivity {
@@ -27,7 +32,7 @@ public class MusicPlayActivity extends AppCompatActivity {
     private ListView musicList;
     private File[] musicFiles;
     private int lastPlayedFilePosition;
-    private Boolean isExecuted = false;
+    private Handler handler = new Handler();
 
     //This is Listener. Not run even if write code on this
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -125,8 +130,26 @@ public class MusicPlayActivity extends AppCompatActivity {
             player = new Player();
         }
 
-        onSaveInstanceState(new Bundle());
+        createTimer();
 
+    }
+
+    private void createTimer(){
+        Timer timer = new Timer();
+        int delay = 0;
+        int period = 1000;
+        timer.schedule( new PlayingTimeCounter() , delay , period );
+    }
+
+    class PlayingTimeCounter extends TimerTask {
+        public void run(){
+            handler.post(new Runnable() {
+                public void run() {
+                    TextView target = findViewById(R.id.playingStatuses);
+                    target.setText( player.getCurrentPositionByTime());
+                }
+            });
+        }
     }
 
     private void addToDeviceVolume(int value){
