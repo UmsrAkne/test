@@ -171,31 +171,18 @@ public class MusicPlayActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("executed" , "string");
-        Log.i("userTag" , "exe onSaveInstanceState");
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        //If , Received keyCode is back key , change behavior.
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            return true;
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
     }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle saveInstanceState){
-        super.onRestoreInstanceState(saveInstanceState);
-        Log.i("userTag" , "exe onRestoreInstanceState");
-    }
-
-    @Override
-    protected void onPause(){
-        super.onPause();
-        onSaveInstanceState(new Bundle());
-        Log.i("userTag","exe pause method");
-    }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-        Log.i("userTag","exe resume");
-    }
-
 
 
 }
