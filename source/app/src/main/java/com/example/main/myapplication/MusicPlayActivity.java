@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -34,7 +37,6 @@ public class MusicPlayActivity extends AppCompatActivity {
     private int lastPlayedFilePosition;
     private Handler handler = new Handler();
 
-    //This is Listener. Not run even if write code on this
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -71,11 +73,6 @@ public class MusicPlayActivity extends AppCompatActivity {
         }
     };
 
-    protected void onRestart(){
-        super.onRestart();
-        Log.i("userTag","restert");
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i("userTag" , " called onCreate()");
@@ -110,18 +107,16 @@ public class MusicPlayActivity extends AppCompatActivity {
             }
         });
 
-        final int VOLUME_PLUS_VALUE = 1;
-        final int VOLUME_MINUS_VALUE = -1;
 
         findViewById(R.id.volumeDownButton).setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                addToDeviceVolume(VOLUME_MINUS_VALUE);
+                volumeControlButtonAction(false);
             }
         });
 
         findViewById(R.id.volumeUpButton).setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                addToDeviceVolume(VOLUME_PLUS_VALUE);
+                volumeControlButtonAction(true);
             }
         });
 
@@ -131,7 +126,21 @@ public class MusicPlayActivity extends AppCompatActivity {
         }
 
         createTimer();
+    }
 
+    private void volumeControlButtonAction(boolean volumeMoveDirection ){
+        int addition = 1;
+        if(!volumeMoveDirection ) addition = -1;
+        addToDeviceVolume(addition);
+        String stringVolume = String.valueOf( getDeviceVolume() );
+        Toast toast = Toast.makeText(getApplicationContext() , "volume" + stringVolume , Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER , 0 , 0);
+        toast.show();
+    }
+
+    private int getDeviceVolume(){
+        AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        return am.getStreamVolume(AudioManager.STREAM_MUSIC);
     }
 
     private void createTimer(){
@@ -146,7 +155,8 @@ public class MusicPlayActivity extends AppCompatActivity {
             handler.post(new Runnable() {
                 public void run() {
                     TextView target = findViewById(R.id.playingStatuses);
-                    target.setText( player.getCurrentPositionByTime());
+                    target.setText( player.getCurrentPositionByTime() + "  /  ");
+                    target.append( player.getPlayingFileLength());
                 }
             });
         }
@@ -183,12 +193,6 @@ public class MusicPlayActivity extends AppCompatActivity {
 
     private void insertToList( String[] insertionTexts ){
         ArrayAdapter arrayAdapter = new ArrayAdapter<>(this , android.R.layout.simple_list_item_1 ,insertionTexts);
-        this.musicList = findViewById(R.id.musicList);
-        musicList.setAdapter(arrayAdapter);
-    }
-
-    private void insertToList( File[] files){
-        ArrayAdapter arrayAdapter = new ArrayAdapter<>(this , android.R.layout.simple_list_item_1 , files);
         this.musicList = findViewById(R.id.musicList);
         musicList.setAdapter(arrayAdapter);
     }
