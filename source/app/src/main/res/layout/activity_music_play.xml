@@ -15,7 +15,7 @@
         android:layout_marginLeft="10dp"
         app:layout_constraintLeft_toRightOf="@id/textClock"
         app:layout_constraintBottom_toTopOf="@id/minus30sButton"
-        android:textSize="25sp" />
+        android:textSize="20sp" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
