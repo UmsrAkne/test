@@ -4,6 +4,7 @@ import android.media.MediaPlayer;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public final class Player {
 
@@ -47,41 +48,48 @@ public final class Player {
         isPausing = true;
     }
 
+    public String getPlayingFileLength(){
+        int playingFileLength = mediaPlayer.getDuration();
+        if(playingFileLength <= 0) playingFileLength = 0;
+        return toStringTime(playingFileLength);
+    }
+
     public String getCurrentPositionByTime(){
         int currentPositionByMilliSeconds = mediaPlayer.getCurrentPosition();
-        int crPos = currentPositionByMilliSeconds / 1000;
+        if( currentPositionByMilliSeconds <= 0 ) currentPositionByMilliSeconds = 0;
+        return toStringTime(currentPositionByMilliSeconds);
+    }
+
+    //Convert to time string from milliseconds.
+    private String toStringTime(int numberOfMilliSeconds){
+
+        int numberOfSeconds = numberOfMilliSeconds /1000;
 
         int hours = 0;
-        if(crPos > 3600) hours = crPos / 3600;
+        if(numberOfSeconds > 3600) hours = numberOfSeconds / 3600;
 
         int minutes = 0;
-        if(crPos > 60){
-            minutes = crPos % 3600;
+        if(numberOfSeconds > 60){
+            minutes = numberOfSeconds % 3600;
             minutes = minutes / 60;
         }
 
-        int seconds = crPos % 60;
+        int seconds = numberOfSeconds % 60;
 
         final String zeroPadding = "0";
 
         String strHours = String.valueOf(hours);
         if(strHours.length() == 1) strHours = zeroPadding + strHours;
+        strHours += ":";
 
         String strMinutes = String.valueOf(minutes);
         if(strMinutes.length() == 1) strMinutes =  zeroPadding + strMinutes;
+        strMinutes += ":";
 
         String strSeconds = String.valueOf(seconds);
         if(strSeconds.length() == 1) strSeconds = zeroPadding + strSeconds;
 
-        String playTime = strHours;
-        playTime += strMinutes;
-        playTime += strSeconds;
-        return playTime;
-    }
-
-    public int getCurrentPositionBySeconds(){
-        int currentPositionByMilliSeconds = mediaPlayer.getCurrentPosition();
-        return currentPositionByMilliSeconds / 1000;
+        return strHours + strMinutes + strSeconds;
     }
 
     public void stop(){
