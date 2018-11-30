@@ -4,15 +4,18 @@ import android.media.MediaPlayer;
 import android.util.Log;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
-public final class Player {
+public final class Player{
 
     private MediaPlayer mediaPlayer = new MediaPlayer();
-    private String playingFileName = "Don't playing";
+    private String playingFileName = "not playing";
     private Boolean isPausing = false;
     public final int PLUS_THIRTY_SECONDS = 30000;    //In terms of milliseconds
     public final int MINUS_THIRTY_SECONDS = -30000;  //In terms of milliseconds
+
+    public void setOnCompletionListener(MediaPlayer.OnCompletionListener listener){
+        mediaPlayer.setOnCompletionListener(listener);
+    }
 
     //Example.
     //player.play("/storage/emulated/0/Music/fileName.mp3")
