@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
@@ -130,8 +131,22 @@ public class MusicPlayActivity extends AppCompatActivity {
                 player.play( selectedMusicFile.getPath() );
                 lastPlayedFilePosition = position;
                 createTimer();
+                player.setOnCompletionListener(new CompleteEventListener());
+                Log.i("userTag" ,"setEventListener");
+
             }
         });
+    }
+
+    class CompleteEventListener implements MediaPlayer.OnCompletionListener{
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            if(musicFiles.length > lastPlayedFilePosition + 1){
+                lastPlayedFilePosition += 1;
+                String nextPlayFilePath = musicFiles[ lastPlayedFilePosition ].getPath();
+                player.play(nextPlayFilePath);
+            }
+        }
     }
 
     private void volumeControlButtonAction(boolean volumeMoveDirection ){
