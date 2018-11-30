@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public final class Player {
 
     private MediaPlayer mediaPlayer = new MediaPlayer();
+    private String playingFileName = "Don't playing";
     private Boolean isPausing = false;
     public final int PLUS_THIRTY_SECONDS = 30000;    //In terms of milliseconds
     public final int MINUS_THIRTY_SECONDS = -30000;  //In terms of milliseconds
@@ -34,6 +35,7 @@ public final class Player {
             e.printStackTrace();
         }
 
+        playingFileName = separateFileName( soundFilePath );
         mediaPlayer.start();
     }
 
@@ -48,6 +50,8 @@ public final class Player {
         isPausing = true;
     }
 
+    public String getPlayingFileName(){ return playingFileName; }
+
     public String getPlayingFileLength(){
         int playingFileLength = mediaPlayer.getDuration();
         if(playingFileLength <= 0) playingFileLength = 0;
@@ -58,6 +62,14 @@ public final class Player {
         int currentPositionByMilliSeconds = mediaPlayer.getCurrentPosition();
         if( currentPositionByMilliSeconds <= 0 ) currentPositionByMilliSeconds = 0;
         return toStringTime(currentPositionByMilliSeconds);
+    }
+
+    private String separateFileName( String filePath ){
+        int lastIndex =  filePath.lastIndexOf("/");
+        if( lastIndex <= 0 ) return "Don't playing";
+
+        //Slash is unnecessary so I add 1 to index.
+        return filePath.substring( lastIndex + 1);
     }
 
     //Convert to time string from milliseconds.
