@@ -36,42 +36,7 @@ public class MusicPlayActivity extends AppCompatActivity {
     private File[] musicFiles;
     private int lastPlayedFilePosition;
     private Handler handler = new Handler();
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-            int nextPlayFilePosition = lastPlayedFilePosition;
-            Log.i("userTag",Integer.toString(lastPlayedFilePosition));
-
-            switch (item.getItemId()) {
-                case R.id.navigation_Prev:
-                    nextPlayFilePosition -= 1;
-                    if(nextPlayFilePosition >= 0){
-                        String nextPlayFilePath = musicFiles[ nextPlayFilePosition ].getPath();
-                        lastPlayedFilePosition -= 1;
-                        player.play( nextPlayFilePath );
-                    }
-                    return true;
-
-                case R.id.navigation_Play:
-                    player.pause();
-                    return true;
-
-                case R.id.navigation_Next:
-                    nextPlayFilePosition += 1;
-                    if(musicFiles.length > nextPlayFilePosition){
-                        String nextPlayFilePath = musicFiles[ nextPlayFilePosition ].getPath();
-                        lastPlayedFilePosition += 1;
-                        player.play( nextPlayFilePath );
-                    }
-                    return true;
-            }
-            return false;
-        }
-    };
+    private Timer playTimeCounter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +45,6 @@ public class MusicPlayActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_play);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         ContentsLoader loader = new ContentsLoader(this);
 
