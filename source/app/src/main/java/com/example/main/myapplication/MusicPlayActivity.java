@@ -11,12 +11,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -56,8 +53,16 @@ public class MusicPlayActivity extends AppCompatActivity {
         }
 
         insertToList(fileNameList);
-        setMusicListOnItemClickEvent();
+        setEventListenerAtButtons();
 
+        //if it don't write this, created multiple player instances.
+        if(savedInstanceState == null) {
+            player = new Player();
+        }
+
+    }
+
+    private void setEventListenerAtButtons(){
         findViewById(R.id.minus30sButton).setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 player.seekFromCurrentPosition( player.MINUS_THIRTY_SECONDS );
@@ -69,7 +74,6 @@ public class MusicPlayActivity extends AppCompatActivity {
                 player.seekFromCurrentPosition( player.PLUS_THIRTY_SECONDS );
             }
         });
-
 
         findViewById(R.id.volumeDownButton).setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -83,12 +87,51 @@ public class MusicPlayActivity extends AppCompatActivity {
             }
         });
 
-        //if it don't write this, created multiple player instances.
-        if(savedInstanceState == null) {
-            player = new Player();
-        }
+        findViewById(R.id.playOrPauseButton).setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v){
+                player.pause();
 
-        createTimer();
+            }
+        });
+
+        findViewById(R.id.prevPlayButton).setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v){
+                int nextPlayFilePosition = lastPlayedFilePosition;
+                nextPlayFilePosition -= 1;
+                if(nextPlayFilePosition >= 0){
+                    String nextPlayFilePath = musicFiles[ nextPlayFilePosition ].getPath();
+                    lastPlayedFilePosition -= 1;
+                    player.play( nextPlayFilePath );
+                }
+            }
+        });
+
+        findViewById(R.id.nextPlayButton).setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v){
+                int nextPlayFilePosition = lastPlayedFilePosition;
+                nextPlayFilePosition += 1;
+                if(musicFiles.length > nextPlayFilePosition){
+                    String nextPlayFilePath = musicFiles[ nextPlayFilePosition ].getPath();
+                    lastPlayedFilePosition += 1;
+                    player.play( nextPlayFilePath );
+                }
+            }
+        });
+
+        //at ListView musicList
+        musicList = findViewById(R.id.musicList);
+        musicList.setOnItemClickListener( new AdapterView.OnItemClickListener()
+        {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                File selectedMusicFile = musicFiles[position];
+                player.play( selectedMusicFile.getPath() );
+                lastPlayedFilePosition = position;
+                createTimer();
+            }
+        });
     }
 
     private void volumeControlButtonAction(boolean volumeMoveDirection ){
@@ -96,7 +139,7 @@ public class MusicPlayActivity extends AppCompatActivity {
         if(!volumeMoveDirection ) addition = -1;
         addToDeviceVolume(addition);
         String stringVolume = String.valueOf( getDeviceVolume() );
-        Toast toast = Toast.makeText(getApplicationContext() , "volume" + stringVolume , Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(getApplicationContext() , "volume " + stringVolume , Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER , 0 , 0);
         toast.show();
     }
@@ -107,19 +150,21 @@ public class MusicPlayActivity extends AppCompatActivity {
     }
 
     private void createTimer(){
-        Timer timer = new Timer();
+        playTimeCounter = new Timer();
         int delay = 0;
-        int period = 1000;
-        timer.schedule( new PlayingTimeCounter() , delay , period );
+        final int UPDATE_INTERVAL = 1000;
+        playTimeCounter.schedule( new PlayingTimeCounter() , delay , UPDATE_INTERVAL );
     }
 
     class PlayingTimeCounter extends TimerTask {
         public void run(){
             handler.post(new Runnable() {
                 public void run() {
+                    final String SEPARATION = "  /  ";
                     TextView target = findViewById(R.id.playingStatuses);
-                    target.setText( player.getCurrentPositionByTime() + "  /  ");
-                    target.append( player.getPlayingFileLength());
+                    target.setText( player.getCurrentPositionByTime() + SEPARATION);
+                    target.append( player.getPlayingFileLength() + SEPARATION);
+                    target.append( player.getPlayingFileName());
                 }
             });
         }
@@ -130,19 +175,6 @@ public class MusicPlayActivity extends AppCompatActivity {
         int musicVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         musicVolume += value;
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,musicVolume,0);
-    }
-
-    private void setMusicListOnItemClickEvent(){
-        musicList = findViewById(R.id.musicList);
-        musicList.setOnItemClickListener( new AdapterView.OnItemClickListener()
-        {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-                String item = (String)musicList.getItemAtPosition(position);
-                File selectedMusicFile = musicFiles[ position ];
-                player.play( selectedMusicFile.getPath() );
-                lastPlayedFilePosition = position;
-            }
-        });
     }
 
     private void runTimePermissionRequest(){
