@@ -11,86 +11,110 @@
         android:id="@+id/playingStatuses"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="18dp"
         android:text="@string/notPlaying"
-        android:layout_marginLeft="10dp"
-        app:layout_constraintLeft_toRightOf="@id/textClock"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:ellipsize = "end"
+        android:singleLine="true"
         app:layout_constraintBottom_toTopOf="@id/minus30sButton"
-        android:textSize="20sp" />
-
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="0dp"
-        android:layout_height="31dp"
-        android:background="?android:attr/windowBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/navigation" />
-
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <ListView
         android:id="@+id/musicList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        tools:layout_editor_absoluteY="33dp" />
-
-    <Space
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/navigation"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/musicList" />
+        android:layout_height="0dp"
+        android:dividerHeight="0dp"
+        android:scrollbars="vertical"
+        android:singleLine = "true"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintTop_toBottomOf="@id/textClock"
+        app:layout_constraintBottom_toTopOf="@id/playingStatuses"
+        />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintTop_toBottomOf="@id/musicList"
+        />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toTopOf="@id/musicList"
+        />
 
     <Button
         android:id="@+id/minus30sButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/title_minus30s"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/navigation"
-        />
+        app:layout_constraintBottom_toTopOf="@+id/prevPlayButton"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
         android:id="@+id/plus30sButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/title_plus30s"
-        app:layout_constraintLeft_toRightOf="@+id/minus30sButton"
-        app:layout_constraintBottom_toTopOf="@+id/navigation"
-        />
+        app:layout_constraintBottom_toTopOf="@+id/prevPlayButton"
+        app:layout_constraintLeft_toRightOf="@+id/minus30sButton" />
 
     <Button
         android:id="@+id/volumeDownButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/title_volDown"
-        app:layout_constraintLeft_toRightOf="@+id/plus30sButton"
-        app:layout_constraintBottom_toTopOf="@+id/navigation"
-        />
+        app:layout_constraintBottom_toTopOf="@+id/prevPlayButton"
+        app:layout_constraintLeft_toRightOf="@+id/plus30sButton" />
 
     <Button
         android:id="@+id/volumeUpButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/title_volUp"
-        app:layout_constraintLeft_toRightOf="@+id/volumeDownButton"
-        app:layout_constraintBottom_toTopOf="@+id/navigation"
-        />
+        app:layout_constraintBottom_toTopOf="@+id/prevPlayButton"
+        app:layout_constraintLeft_toRightOf="@+id/volumeDownButton" />
 
-    <TextClock
-        android:id = "@+id/textClock"
+    <Button
+        android:id="@+id/playOrPauseButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:format24Hour="hh:mm:ss"
-        android:textSize="30dp"
-        android:timeZone="Asia/Tokyo"
-        app:layout_constraintBottom_toTopOf="@id/minus30sButton"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
+        android:text="Play or Pause"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/prevPlayButton" />
 
+    <Button
+        android:id="@+id/nextPlayButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:height="@dimen/activity_horizontal_margin"
+        android:text="next"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/playOrPauseButton" />
+
+    <Button
+        android:id="@+id/prevPlayButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="prev"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <TextClock
+        android:id="@+id/textClock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:duplicateParentState="false"
+        android:format24Hour="hh:mm:ss"
+        android:text='"clock"'
+        android:textSize="23dp"
+        android:timeZone="Asia/Tokyo"
+        android:layout_marginLeft="14dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
 
 
 </android.support.constraint.ConstraintLayout>
