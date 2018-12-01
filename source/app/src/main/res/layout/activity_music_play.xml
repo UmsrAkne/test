@@ -82,7 +82,7 @@
         android:id="@+id/playOrPauseButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Play or Pause"
+        android:text="Play / Pause"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/prevPlayButton" />
 
@@ -115,6 +115,14 @@
         android:layout_marginLeft="14dp"
         app:layout_constraintLeft_toLeftOf="parent"
         />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

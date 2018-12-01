@@ -92,7 +92,6 @@ public class MusicPlayActivity extends AppCompatActivity {
         {
             public void onClick(View v){
                 player.pause();
-
             }
         });
 
@@ -133,7 +132,6 @@ public class MusicPlayActivity extends AppCompatActivity {
                 createTimer();
                 player.setOnCompletionListener(new CompleteEventListener());
                 Log.i("userTag" ,"setEventListener");
-
             }
         });
     }
@@ -209,6 +207,12 @@ public class MusicPlayActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        player.stopAndNewPlayer();
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         //If , Received keyCode is back key , change behavior.
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -221,6 +225,4 @@ public class MusicPlayActivity extends AppCompatActivity {
             return super.onKeyDown(keyCode, event);
         }
     }
-
-
 }

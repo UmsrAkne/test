@@ -21,7 +21,9 @@ public final class Player{
     //player.play("/storage/emulated/0/Music/fileName.mp3")
     public void play(String soundFilePath){
 
-        mediaPlayer.reset();
+        //A media player don't reuse.
+        // Every time I call a method , Create a new player instance by stop().
+        stopAndNewPlayer();
 
         //TODO: Please correct error handling.
         try{
@@ -107,8 +109,10 @@ public final class Player{
         return strHours + strMinutes + strSeconds;
     }
 
-    public void stop(){
+    public void stopAndNewPlayer(){
         mediaPlayer.stop();
+        mediaPlayer.release();
+        mediaPlayer = new MediaPlayer();
     }
 
     public void playNext(){
