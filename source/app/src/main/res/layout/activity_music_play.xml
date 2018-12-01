@@ -26,11 +26,10 @@
         android:layout_height="0dp"
         android:dividerHeight="0dp"
         android:scrollbars="vertical"
-        android:singleLine = "true"
+        android:singleLine="true"
         app:layout_constrainedHeight="true"
-        app:layout_constraintTop_toBottomOf="@id/textClock"
-        app:layout_constraintBottom_toTopOf="@id/playingStatuses"
-        />
+        app:layout_constraintBottom_toTopOf="@+id/seekBar"
+        app:layout_constraintTop_toBottomOf="@id/textClock" />
 
     <View
         android:layout_width="fill_parent"
@@ -123,6 +122,14 @@
         android:text="Stop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="fill_parent"
+        android:layout_height="25dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/playingStatuses"
+        tools:layout_editor_absoluteX="0dp" />
 
 
 </android.support.constraint.ConstraintLayout>
