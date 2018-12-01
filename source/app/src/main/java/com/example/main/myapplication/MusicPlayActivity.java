@@ -145,6 +145,7 @@ public class MusicPlayActivity extends AppCompatActivity {
                 lastPlayedFilePosition += 1;
                 String nextPlayFilePath = musicFiles[ lastPlayedFilePosition ].getPath();
                 player.play(nextPlayFilePath);
+                player.setOnCompletionListener(new CompleteEventListener());
             }
         }
     }
