@@ -3,6 +3,7 @@ package com.example.main.myapplication;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -27,7 +28,6 @@ import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
 public class MusicPlayActivity extends AppCompatActivity {
 
     private Player player;
@@ -36,6 +36,8 @@ public class MusicPlayActivity extends AppCompatActivity {
     private int lastPlayedFilePosition;
     private Handler handler = new Handler();
     private Timer playTimeCounter;
+
+    private String PREFERENCE_FILE_NAME = "lastPlayingStatus";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,7 +160,6 @@ public class MusicPlayActivity extends AppCompatActivity {
     class SoundControlSeekBarEventListener implements SeekBar.OnSeekBarChangeListener{
         @Override // Called when start drag.
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            Log.i("userTag" , String.valueOf( seekBar.getProgress() ));
         }
 
         @Override
@@ -233,10 +234,30 @@ public class MusicPlayActivity extends AppCompatActivity {
         musicList.setAdapter(arrayAdapter);
     }
 
+    private void savePreferecen(){
+        SharedPreferences preference = getSharedPreferences( PREFERENCE_FILE_NAME , MODE_PRIVATE);
+        SharedPreferences.Editor editor = preference.edit();
+        editor.putInt("lastPosition", player.getCurrentPosition());
+        editor.putString("lastPlayingFile" , player.getPlayingFileName());
+        editor.commit();
+    }
+
+    private void readPreference(){
+        SharedPreferences preference = getSharedPreferences( PREFERENCE_FILE_NAME , MODE_PRIVATE );
+        int savedData = preference.getInt("lastPosition" , 0);
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
+        savePreferecen();
         player.stopAndNewPlayer();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        readPreference();
     }
 
     @Override
