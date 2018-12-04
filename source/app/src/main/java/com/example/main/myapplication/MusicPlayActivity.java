@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,7 +61,6 @@ public class MusicPlayActivity extends AppCompatActivity {
         if(savedInstanceState == null) {
             player = new Player();
         }
-
     }
 
     private void setEventListenerAtButtons(){
@@ -126,12 +126,7 @@ public class MusicPlayActivity extends AppCompatActivity {
         musicList.setOnItemClickListener( new AdapterView.OnItemClickListener()
         {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-                File selectedMusicFile = musicFiles[position];
-                player.play( selectedMusicFile.getPath() );
-                lastPlayedFilePosition = position;
-                createTimer();
-                player.setOnCompletionListener(new CompleteEventListener());
-                Log.i("userTag" ,"setEventListener");
+                startSound( position );
             }
         });
     }
@@ -145,6 +140,34 @@ public class MusicPlayActivity extends AppCompatActivity {
                 player.play(nextPlayFilePath);
                 player.setOnCompletionListener(new CompleteEventListener());
             }
+        }
+    }
+
+    private void startSound(int indexInMusicFiles){
+        File selectedMusicFile = musicFiles[ indexInMusicFiles ];
+        player.play( selectedMusicFile.getPath() );
+        lastPlayedFilePosition = indexInMusicFiles;
+        createTimer();
+        player.setOnCompletionListener(new CompleteEventListener());
+
+        SeekBar seekBar = findViewById(R.id.soundControlSeekBar);
+        seekBar.setOnSeekBarChangeListener(new SoundControlSeekBarEventListener());
+        seekBar.setMax( player.getDuration() );
+    }
+
+    class SoundControlSeekBarEventListener implements SeekBar.OnSeekBarChangeListener{
+        @Override // Called when start drag.
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            Log.i("userTag" , String.valueOf( seekBar.getProgress() ));
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) { }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            player.seekTo( seekBar.getProgress() );
+            seekBar.setProgress( seekBar.getProgress() );
         }
     }
 
@@ -164,6 +187,8 @@ public class MusicPlayActivity extends AppCompatActivity {
     }
 
     private void createTimer(){
+        if(playTimeCounter != null) return;
+
         playTimeCounter = new Timer();
         int delay = 0;
         final int UPDATE_INTERVAL = 1000;
@@ -179,6 +204,8 @@ public class MusicPlayActivity extends AppCompatActivity {
                     target.setText( player.getCurrentPositionByTime() + SEPARATION);
                     target.append( player.getPlayingFileLength() + SEPARATION);
                     target.append( player.getPlayingFileName());
+                    SeekBar seekBar = findViewById(R.id.soundControlSeekBar);
+                    seekBar.setProgress( player.getCurrentPosition() );
                 }
             });
         }
