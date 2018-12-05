@@ -59,7 +59,6 @@ public class MusicPlayActivity extends AppCompatActivity {
         insertToList(fileNameList);
         setEventListenerAtButtons();
 
-        //if it don't write this, created multiple player instances.
         if(savedInstanceState == null) {
             player = new Player();
         }
@@ -100,12 +99,9 @@ public class MusicPlayActivity extends AppCompatActivity {
         findViewById(R.id.prevPlayButton).setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v){
-                int nextPlayFilePosition = lastPlayedFilePosition;
-                nextPlayFilePosition -= 1;
+                int nextPlayFilePosition = lastPlayedFilePosition -1;
                 if(nextPlayFilePosition >= 0){
-                    String nextPlayFilePath = musicFiles[ nextPlayFilePosition ].getPath();
-                    lastPlayedFilePosition -= 1;
-                    player.play( nextPlayFilePath );
+                    startSound( nextPlayFilePosition );
                 }
             }
         });
@@ -113,12 +109,9 @@ public class MusicPlayActivity extends AppCompatActivity {
         findViewById(R.id.nextPlayButton).setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v){
-                int nextPlayFilePosition = lastPlayedFilePosition;
-                nextPlayFilePosition += 1;
+                int nextPlayFilePosition = lastPlayedFilePosition + 1;
                 if(musicFiles.length > nextPlayFilePosition){
-                    String nextPlayFilePath = musicFiles[ nextPlayFilePosition ].getPath();
-                    lastPlayedFilePosition += 1;
-                    player.play( nextPlayFilePath );
+                    startSound( nextPlayFilePosition );
                 }
             }
         });
@@ -159,8 +152,7 @@ public class MusicPlayActivity extends AppCompatActivity {
 
     class SoundControlSeekBarEventListener implements SeekBar.OnSeekBarChangeListener{
         @Override // Called when start drag.
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        }
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) { }
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) { }
@@ -174,7 +166,7 @@ public class MusicPlayActivity extends AppCompatActivity {
 
     private void volumeControlButtonAction(boolean volumeMoveDirection ){
         int addition = 1;
-        if(!volumeMoveDirection ) addition = -1;
+        if(!volumeMoveDirection ) addition = -1; // If need be , Reverse the plus and minus.
         addToDeviceVolume(addition);
         String stringVolume = String.valueOf( getDeviceVolume() );
         Toast toast = Toast.makeText(getApplicationContext() , "volume " + stringVolume , Toast.LENGTH_SHORT);
@@ -234,7 +226,7 @@ public class MusicPlayActivity extends AppCompatActivity {
         musicList.setAdapter(arrayAdapter);
     }
 
-    private void savePreferecen(){
+    private void savePreference(){
         SharedPreferences preference = getSharedPreferences( PREFERENCE_FILE_NAME , MODE_PRIVATE);
         SharedPreferences.Editor editor = preference.edit();
         editor.putInt("lastPosition", player.getCurrentPosition());
@@ -250,7 +242,7 @@ public class MusicPlayActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        savePreferecen();
+        savePreference();
         player.stopAndNewPlayer();
     }
 
