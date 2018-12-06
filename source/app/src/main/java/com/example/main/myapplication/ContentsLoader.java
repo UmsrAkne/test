@@ -15,8 +15,8 @@ public class ContentsLoader {
 
     private Context context = null;
 
-    public ContentsLoader(Context applicationContenxt){
-        this.context = applicationContenxt;
+    public ContentsLoader(Context applicationContext){
+        this.context = applicationContext;
     }
 
 

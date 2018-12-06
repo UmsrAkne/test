@@ -25,18 +25,15 @@ public final class Player{
         // Every time I call a method , Create a new player instance by stop().
         stopAndNewPlayer();
 
-        //TODO: Please correct error handling.
         try{
             mediaPlayer.setDataSource(soundFilePath);
-        } catch (IOException e){
-            Log.e("userTag" , "throw error when mediaplayer.setDataSource");
+        } catch (IOException | IllegalStateException e){
             e.printStackTrace();
         }
 
         try {
             mediaPlayer.prepare();
-        } catch (IOException e){
-            Log.e("userTag" , "throw error when mediaplayer.setDataSource");
+        } catch (IOException  | IllegalStateException e){
             e.printStackTrace();
         }
 
