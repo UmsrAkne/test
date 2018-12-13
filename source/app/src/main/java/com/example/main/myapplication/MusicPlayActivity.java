@@ -132,7 +132,8 @@ public class MusicPlayActivity extends AppCompatActivity {
             if(musicFiles.length > lastPlayedFilePosition + 1){
                 lastPlayedFilePosition += 1;
                 String nextPlayFilePath = musicFiles[ lastPlayedFilePosition ].getPath();
-                player.play(nextPlayFilePath);
+                player.setSoundFile(nextPlayFilePath);
+                player.start();
                 player.setOnCompletionListener(new CompleteEventListener());
             }
         }
@@ -140,7 +141,8 @@ public class MusicPlayActivity extends AppCompatActivity {
 
     private void startSound(int indexInMusicFiles){
         File selectedMusicFile = musicFiles[ indexInMusicFiles ];
-        player.play( selectedMusicFile.getPath() );
+        player.setSoundFile( selectedMusicFile.getPath() );
+        player.start();
         lastPlayedFilePosition = indexInMusicFiles;
         createTimer();
         player.setOnCompletionListener(new CompleteEventListener());

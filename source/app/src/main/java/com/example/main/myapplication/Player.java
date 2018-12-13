@@ -19,7 +19,7 @@ public final class Player{
 
     //Example.
     //player.play("/storage/emulated/0/Music/fileName.mp3")
-    public void play(String soundFilePath){
+    public void setSoundFile(String soundFilePath){
 
         //A media player don't reuse.
         // Every time I call a method , Create a new player instance by stop().
@@ -38,6 +38,9 @@ public final class Player{
         }
 
         playingFileName = separateFileName( soundFilePath );
+    }
+
+    public void start(){
         mediaPlayer.start();
     }
 
