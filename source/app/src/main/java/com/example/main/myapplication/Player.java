@@ -9,6 +9,7 @@ public final class Player{
 
     private MediaPlayer mediaPlayer = new MediaPlayer();
     private String playingFileName = "not playing";
+    private String playingFilePath = "";
     private Boolean isPausing = false;
     public final int PLUS_THIRTY_SECONDS = 30000;    //In terms of milliseconds
     public final int MINUS_THIRTY_SECONDS = -30000;  //In terms of milliseconds
@@ -37,7 +38,13 @@ public final class Player{
             e.printStackTrace();
         }
 
+        playingFilePath = soundFilePath;
         playingFileName = separateFileName( soundFilePath );
+    }
+
+    public void setSoundFile(String soundFilePath , int startPosition){
+        this.setSoundFile( soundFilePath );
+        mediaPlayer.seekTo( startPosition );
     }
 
     public void start(){
@@ -128,6 +135,11 @@ public final class Player{
         if(currentPosition > 0){
             mediaPlayer.seekTo( currentPosition + seekTime );
         }
+    }
+
+    public String getPlayingFilePath(){
+        if(playingFilePath != null) return playingFilePath;
+        else return "";
     }
 
     public int getCurrentPosition(){
