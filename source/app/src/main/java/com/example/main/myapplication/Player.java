@@ -119,14 +119,6 @@ public final class Player{
         mediaPlayer = new MediaPlayer();
     }
 
-    public void playNext(){
-
-    }
-
-    public void playPrev(){
-
-    }
-
     public void seekFromCurrentPosition(int seekTime){
         int currentPosition = mediaPlayer.getCurrentPosition();
         if(currentPosition > 0){
