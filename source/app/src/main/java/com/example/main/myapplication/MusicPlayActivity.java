@@ -231,20 +231,23 @@ public class MusicPlayActivity extends AppCompatActivity {
     private void savePreference(){
         SharedPreferences preference = getSharedPreferences( PREFERENCE_FILE_NAME , MODE_PRIVATE);
         SharedPreferences.Editor editor = preference.edit();
-        editor.putInt("lastPosition", player.getCurrentPosition());
-        editor.putString("lastPlayingFile" , player.getPlayingFileName());
+        editor.putInt("lastPlayingPosition", player.getCurrentPosition());
+        editor.putString("lastPlayingFilePath" , player.getPlayingFilePath());
         editor.commit();
     }
 
     private void readPreference(){
         SharedPreferences preference = getSharedPreferences( PREFERENCE_FILE_NAME , MODE_PRIVATE );
-        int savedData = preference.getInt("lastPosition" , 0);
+        String lastPlayingFilePath = preference.getString("lastPlayingFilePath" , "");
+        int lastPlayingPosition = preference.getInt("lastPlayingPosition" , 0);
+        player.setSoundFile( lastPlayingFilePath , lastPlayingPosition );
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         savePreference();
+        player.pause();
         player.stopAndNewPlayer();
     }
 
