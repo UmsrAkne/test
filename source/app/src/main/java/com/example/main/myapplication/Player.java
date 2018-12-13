@@ -10,7 +10,6 @@ public final class Player{
     private MediaPlayer mediaPlayer = new MediaPlayer();
     private String playingFileName = "not playing";
     private String playingFilePath = "";
-    private Boolean isPausing = false;
     public final int PLUS_THIRTY_SECONDS = 30000;    //In terms of milliseconds
     public final int MINUS_THIRTY_SECONDS = -30000;  //In terms of milliseconds
 
@@ -52,14 +51,12 @@ public final class Player{
     }
 
     public void pause(){
-        if(isPausing){
+        if(!mediaPlayer.isPlaying()){
             mediaPlayer.start();
-            isPausing = false;
             return;
         }
 
         mediaPlayer.pause();
-        isPausing = true;
     }
 
     public String getPlayingFileName(){ return playingFileName; }
