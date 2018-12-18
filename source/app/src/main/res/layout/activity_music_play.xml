@@ -29,7 +29,7 @@
         android:singleLine="true"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toTopOf="@+id/soundControlSeekBar"
-        app:layout_constraintTop_toBottomOf="@id/textClock" />
+        app:layout_constraintTop_toBottomOf="@+id/reloadButton" />
 
     <View
         android:layout_width="fill_parent"
@@ -90,7 +90,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:height="@dimen/activity_horizontal_margin"
-        android:text="next"
+        android:text="@string/next"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/playOrPauseButton" />
 
@@ -98,7 +98,7 @@
         android:id="@+id/prevPlayButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="prev"
+        android:text="@string/prev"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -106,14 +106,13 @@
         android:id="@+id/textClock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="14dp"
         android:duplicateParentState="false"
         android:format24Hour="hh:mm:ss"
         android:text='"clock"'
         android:textSize="23dp"
         android:timeZone="Asia/Tokyo"
-        android:layout_marginLeft="14dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        />
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
         android:id="@+id/button"
@@ -130,6 +129,14 @@
         android:layout_marginLeft="8dp"
         app:layout_constraintBottom_toTopOf="@+id/playingStatuses"
         app:layout_constraintLeft_toLeftOf="parent" />
+
+    <Button
+        android:id="@+id/reloadButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reloaed"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

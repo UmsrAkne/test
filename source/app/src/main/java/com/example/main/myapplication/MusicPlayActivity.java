@@ -47,16 +47,8 @@ public class MusicPlayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_play);
 
-        ContentsLoader loader = new ContentsLoader(this);
+        loadFileList();
 
-        musicFiles = loader.getFilesFromDirectory(Environment.DIRECTORY_MUSIC);
-        String[] fileNameList = new String[ musicFiles.length ];
-
-        for(int i = 0; i < musicFiles.length; i++){
-            fileNameList[i] = musicFiles[i].getName();
-        }
-
-        insertToList(fileNameList);
         setEventListenerAtButtons();
 
         if(savedInstanceState == null) {
@@ -86,6 +78,12 @@ public class MusicPlayActivity extends AppCompatActivity {
         findViewById(R.id.volumeUpButton).setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 volumeControlButtonAction(true);
+            }
+        });
+
+        findViewById(R.id.reloadButton).setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                loadFileList();
             }
         });
 
@@ -174,6 +172,18 @@ public class MusicPlayActivity extends AppCompatActivity {
         Toast toast = Toast.makeText(getApplicationContext() , "volume " + stringVolume , Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER , 0 , 0);
         toast.show();
+    }
+
+    private void loadFileList(){
+        ContentsLoader loader = new ContentsLoader(this);
+        musicFiles = loader.getFilesFromDirectory(Environment.DIRECTORY_MUSIC);
+        String[] fileNameList = new String[ musicFiles.length ];
+
+        for(int i = 0; i < musicFiles.length; i++){
+            fileNameList[i] = musicFiles[i].getName();
+        }
+
+        insertToList(fileNameList);
     }
 
     private int getDeviceVolume(){
