@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -86,6 +87,8 @@ public class MusicPlayActivity extends AppCompatActivity {
         {
             public void onClick(View v){
                 player.pause();
+                if(player.isPlaying()) getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                else getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
         });
 
@@ -139,6 +142,8 @@ public class MusicPlayActivity extends AppCompatActivity {
         lastPlayedFilePosition = indexInMusicFiles;
         createTimer();
         player.setOnCompletionListener(new CompleteEventListener());
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         SeekBar seekBar = findViewById(R.id.soundControlSeekBar);
         seekBar.setOnSeekBarChangeListener(new SoundControlSeekBarEventListener());
@@ -236,8 +241,8 @@ public class MusicPlayActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         savePreference();
-        player.pause();
         player.stopAndNewPlayer();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override

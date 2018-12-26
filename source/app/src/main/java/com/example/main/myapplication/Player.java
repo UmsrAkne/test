@@ -59,6 +59,10 @@ public final class Player{
         mediaPlayer.pause();
     }
 
+    public  Boolean isPlaying(){
+        return mediaPlayer.isPlaying();
+    }
+
     public String getPlayingFileName(){ return playingFileName; }
 
     public String getPlayingFileLength(){
