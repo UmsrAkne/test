@@ -212,7 +212,7 @@ public class MusicPlayActivity extends AppCompatActivity {
     }
 
     private void insertToList( String[] insertionTexts ){
-        ArrayAdapter arrayAdapter = new ArrayAdapter<>(this , android.R.layout.simple_list_item_1 ,insertionTexts);
+        ArrayAdapter arrayAdapter = new ArrayAdapter<>(this , R.layout.custom_list,insertionTexts);
         this.musicList = findViewById(R.id.musicList);
         musicList.setAdapter(arrayAdapter);
     }
