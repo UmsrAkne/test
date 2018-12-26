@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class ContentsLoader {
 
@@ -23,6 +24,7 @@ public class ContentsLoader {
     public File[] getFilesFromDirectory(String targetDirectoryName){
         File directory = Environment.getExternalStoragePublicDirectory(targetDirectoryName);
         File[] files = new File(directory.getPath()).listFiles();
+        Arrays.sort(files);
         return files;
     }
 
