@@ -1,11 +1,9 @@
 package com.example.main.myapplication;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Environment;
 import android.os.Handler;
@@ -14,7 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,7 +19,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.util.Timer;
@@ -36,7 +32,6 @@ public class MusicPlayActivity extends AppCompatActivity {
     private int lastPlayedFilePosition;
     private Handler handler = new Handler();
     private Timer playTimeCounter;
-
     private String PREFERENCE_FILE_NAME = "lastPlayingStatus";
 
     @Override
@@ -71,13 +66,13 @@ public class MusicPlayActivity extends AppCompatActivity {
 
         findViewById(R.id.volumeDownButton).setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                volumeControlButtonAction(false);
+                moveDeviceVolume(false);
             }
         });
 
         findViewById(R.id.volumeUpButton).setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                volumeControlButtonAction(true);
+                moveDeviceVolume(true);
             }
         });
 
@@ -164,16 +159,6 @@ public class MusicPlayActivity extends AppCompatActivity {
         }
     }
 
-    private void volumeControlButtonAction(boolean volumeMoveDirection ){
-        int addition = 1;
-        if(!volumeMoveDirection ) addition = -1; // If need be , Reverse the plus and minus.
-        addToDeviceVolume(addition);
-        String stringVolume = String.valueOf( getDeviceVolume() );
-        Toast toast = Toast.makeText(getApplicationContext() , "volume " + stringVolume , Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER , 0 , 0);
-        toast.show();
-    }
-
     private void loadFileList(){
         ContentsLoader loader = new ContentsLoader(this);
         musicFiles = loader.getFilesFromDirectory(Environment.DIRECTORY_MUSIC);
@@ -184,11 +169,6 @@ public class MusicPlayActivity extends AppCompatActivity {
         }
 
         insertToList(fileNameList);
-    }
-
-    private int getDeviceVolume(){
-        AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        return am.getStreamVolume(AudioManager.STREAM_MUSIC);
     }
 
     private void createTimer(){
@@ -216,11 +196,10 @@ public class MusicPlayActivity extends AppCompatActivity {
         }
     }
 
-    private void addToDeviceVolume(int value){
-        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        int musicVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        musicVolume += value;
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,musicVolume,0);
+    private void moveDeviceVolume( Boolean direction ){
+        VolumeController volumeController = new VolumeController( this );
+        if(direction) volumeController.upDeviceVolume();
+        else volumeController.downDeviceVolume();
     }
 
     private void runTimePermissionRequest(){
