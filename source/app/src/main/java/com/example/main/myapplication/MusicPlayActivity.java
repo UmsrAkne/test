@@ -93,6 +93,7 @@ public class MusicPlayActivity extends AppCompatActivity {
                 else{
                     player.start();
                     player.setOnCompletionListener(new CompleteEventListener());
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 }
             }
         });
