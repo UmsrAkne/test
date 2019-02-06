@@ -86,9 +86,13 @@ public class MusicPlayActivity extends AppCompatActivity {
         findViewById(R.id.playOrPauseButton).setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v){
-                player.pause();
-                if(player.isPlaying()) getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                else getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                if(player.isPlaying()){
+                    player.pause();
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                }
+                else{
+                    player.start();
+                }
             }
         });
 

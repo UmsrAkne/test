@@ -51,11 +51,6 @@ public final class Player{
     }
 
     public void pause(){
-        if(!mediaPlayer.isPlaying()){
-            mediaPlayer.start();
-            return;
-        }
-
         mediaPlayer.pause();
     }
 
