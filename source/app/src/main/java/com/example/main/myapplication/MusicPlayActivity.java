@@ -92,6 +92,7 @@ public class MusicPlayActivity extends AppCompatActivity {
                 }
                 else{
                     player.start();
+                    player.setOnCompletionListener(new CompleteEventListener());
                 }
             }
         });
