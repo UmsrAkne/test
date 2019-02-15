@@ -22,6 +22,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -175,8 +176,20 @@ public class MusicPlayActivity extends AppCompatActivity {
         musicFiles = loader.getFilesFromDirectory(Environment.DIRECTORY_MUSIC);
         String[] fileNameList = new String[ musicFiles.length ];
 
+        MediaPlayer mPlayer = new MediaPlayer();
+        Player tempPlayer = new Player();
+
         for(int i = 0; i < musicFiles.length; i++){
-            fileNameList[i] = musicFiles[i].getName();
+            try{
+                mPlayer.setDataSource( musicFiles[i].getPath() );
+                mPlayer.prepare();
+            }catch(IOException e){
+                e.printStackTrace();;
+            }
+
+            String durationString = tempPlayer.toStringTime( mPlayer.getDuration() ) ;
+            fileNameList[i] =  durationString + " | " + musicFiles[i].getName();
+            mPlayer.reset();
         }
 
         insertToList(fileNameList);

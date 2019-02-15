@@ -81,7 +81,7 @@ public final class Player{
     }
 
     //Convert to time string from milliseconds.
-    private String toStringTime(int numberOfMilliSeconds){
+    public String toStringTime(int numberOfMilliSeconds){
 
         int numberOfSeconds = numberOfMilliSeconds /1000;
 
